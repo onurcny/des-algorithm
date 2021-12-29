@@ -1,5 +1,3 @@
-
-
 /**
  * @param {String} text
  * @returns [ "", "".. ]
@@ -16,7 +14,6 @@ const textToBinaryArray = (text) => {
 }
 
 
-
 const binaryArrayToHexArray = (binaryArray) => {
     let hexArray = [];
 
@@ -27,24 +24,22 @@ const binaryArrayToHexArray = (binaryArray) => {
 }
 
 
-
 const textToHexArray = (text) => {
     return binaryArrayToHexArray(textToBinaryArray(text));
 }
+
+
 /**
  * @param [ "8", '8'..]
  * 
- * 
  * @returns [ ["8","8"..8.], ["8","8"..8.]... ]
  */
-
 const divideTo8CharArrays = (binaryArray) => {
     array = new Array(Math.ceil(binaryArray.length / 8))
     for(let i = 0; i < array.length; i++){
         array[i] = new Array(8)
-        for(let j = 0; j < 8; j++){
+        for(let j = 0; j < 8; j++)
             array[i][j] = binaryArray[i*8+j] || "00000000"
-        }
     }
     return array
 }
@@ -58,12 +53,14 @@ const xorBinaryStrings = (a, b) => {
     return c
 }
 
+
 const permutateWithBitMap = (binString, bitMap) => {
     outputBinString = ""
     for (n of bitMap)
         outputBinString += binString[n-1]
     return outputBinString
 }
+
 
 const binStringToHexString = (binString) => {
     let fourDigits = "";
@@ -80,7 +77,6 @@ const binStringToHexString = (binString) => {
     }
     return hexDigits
 }
-
 
 
 module.exports = {

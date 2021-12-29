@@ -17,19 +17,25 @@ const { generateRoundKeys, generateKeyCD } = require("./key_utils");
 
 
 
+
 const encrypt = (input, key) => {
     if(key.length > 8){
         console.log("key length must be under 9 character");
         return
     }
+
     let binaryArray = textToBinaryArray(input)
     let dividedBinaryArrays = divideTo8CharArrays(binaryArray)
 
-    let enrypted = dividedBinaryArrays.map((val) => {return startEncryption(val, key)})
-    return enrypted.join("")
+    let encrypted = dividedBinaryArrays.map((val) => {return startEncryption(val, key)}).join("")
+
+    let encryptedString = ""
+    for (let i=0; i<encrypted.length/8; i++){
+        let char = encrypted.substring(i*8,i*8+8)
+        encryptedString += String.fromCharCode(parseInt(char,2))
+    }
+    return encryptedString
 }
-
-
 
 
 
@@ -38,10 +44,43 @@ const startEncryption = (binArray, key) => {
 
     let initPermResult = permutateWithBitMap(binArray, initialPermutationBitMap)// initial permutation
     let des16FinalRoundResult = des16Rounds(initPermResult, generateRoundKeys(key))
-    let finalPerm = permutateWithBitMap(des16FinalRoundResult, finalPermutationBitMap)// final permutation
+    let finalPermResult = permutateWithBitMap(des16FinalRoundResult, finalPermutationBitMap)// final permutation
 
-    return finalPerm
+    return finalPermResult
 }
+
+const decrypt = (cipherText, key) => {
+    if(key.length > 8){
+        console.log("key length must be under 9 character");
+        return
+    }
+
+    let binaryArray = textToBinaryArray(cipherText)
+    let dividedBinaryArrays = divideTo8CharArrays(binaryArray)
+    // let dividedBinaryArrays = cipherText
+
+
+    let decrypted = dividedBinaryArrays.map((val) => {return startDecryption(val, key)}).join("")
+    
+    let decryptedString = ""
+    for (let i=0; i<decrypted.length/8; i++){
+        let char = decrypted.substring(i*8,i*8+8)
+        decryptedString += String.fromCharCode(parseInt(char,2))
+    }
+
+    return decryptedString
+}
+
+const startDecryption = (binArray, key) => {
+    binArray = binArray.join("")
+
+    let initPermResult = permutateWithBitMap(binArray, initialPermutationBitMap)// initial permutation
+    let des16FinalRoundResult = des16Rounds(initPermResult, generateRoundKeys(key).reverse())
+    let finalPermResult = permutateWithBitMap(des16FinalRoundResult, finalPermutationBitMap)// final permutation
+
+    return finalPermResult
+}
+
 
 
 const des16Rounds = (binArray, roundKeysArray) => {
@@ -49,7 +88,8 @@ const des16Rounds = (binArray, roundKeysArray) => {
 
     // 16 Döngüleri
     for(let i = 0; i < 16; i++){
-
+        
+        // 
         let leftInput = roundInput.substring(0,32)
         let rightInput = roundInput.substring(32,64)
         let roundKey = roundKeysArray[i]
@@ -119,5 +159,6 @@ const des16Rounds = (binArray, roundKeysArray) => {
 
 
 module.exports = {
-    encrypt
+    encrypt,
+    decrypt
 }
