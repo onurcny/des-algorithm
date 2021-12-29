@@ -28,7 +28,7 @@ const startEncrypt = (binArray, key) => {
     // binArray => ["8","8"... {8}]
     let step1 = initialPermutation(binArray)
     let step2 = des16Rounds(step1, key)
-    
+        
     return 1
 }
 
