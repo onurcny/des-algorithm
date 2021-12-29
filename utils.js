@@ -58,6 +58,13 @@ const xorBinaryStrings = (a, b) => {
     return c
 }
 
+const permutateWithBitMap = (binArray, bitMap) => {
+    outputBinArray = ""
+    for (n of bitMap)
+        outputBinArray += binArray[n-1]
+    return outputBinArray
+}
+
 
 
 module.exports = {
@@ -65,4 +72,5 @@ module.exports = {
     textToBinaryArray,
     divideTo8CharArrays,
     xorBinaryStrings,
+    permutateWithBitMap,
 }

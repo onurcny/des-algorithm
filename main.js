@@ -1,4 +1,4 @@
-const { encrypte } = require("./aes");
+const { encrypt } = require("./aes");
 
-let en = encrypte("onurcan", "envercan")
+let en = encrypt("onurcan", "envercan")
 console.log(en);
