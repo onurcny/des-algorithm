@@ -8,6 +8,16 @@ const initialPermutationBitMap = [
     61,53,45,37,29,21,13,5,
     63,55,47,39,31,23,15,7
 ]
+const finalPermutationBitMap = [
+    [40,8,48,16,56,24,64,32],
+    [39,7,47,15,55,23,65,31],
+    [38,6,46,14,54,22,62,30],
+    [37,5,45,13,53,21,61,29],
+    [36,4,44,12,52,20,60,28],
+    [35,3,43,11,51,19,59,27],
+    [34,2,42,10,50,18,58,26],
+    [33,1,41,9,49,17,57,25],
+]
 
 const SBoxes = [
     [
@@ -60,6 +70,12 @@ const SBoxes = [
         [2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11]
     ]
 ]
+const SBoxBitMap = [
+    16, 7, 20, 21, 29, 12, 28, 17,
+    1, 15, 23, 26, 5, 18, 31, 10,
+    2, 8, 24, 14, 32, 27, 3, 9,
+    19, 13, 30, 6, 22, 11, 4, 25
+]
 const KeyCBitMap = [
     57, 49, 41, 33, 25, 17, 9,
      1, 58, 50, 42, 34, 26, 18,
@@ -89,7 +105,9 @@ const PC2RightHalfBitMap = [
 
 module.exports = {
     initialPermutationBitMap,
+    finalPermutationBitMap,
     SBoxes,
+    SBoxBitMap,
     KeyCBitMap,
     KeyDBitMap,
     keyBitRotation,
