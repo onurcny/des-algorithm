@@ -58,11 +58,27 @@ const xorBinaryStrings = (a, b) => {
     return c
 }
 
-const permutateWithBitMap = (binArray, bitMap) => {
-    outputBinArray = ""
+const permutateWithBitMap = (binString, bitMap) => {
+    outputBinString = ""
     for (n of bitMap)
-        outputBinArray += binArray[n-1]
-    return outputBinArray
+        outputBinString += binString[n-1]
+    return outputBinString
+}
+
+const binStringToHexString = (binString) => {
+    let fourDigits = "";
+    let hexDigits = "";
+
+    for (let i=0; i<binString.length/4; i++){
+        for(let j=0; j<4; j++){
+            fourDigits += binString[i*4+j]
+        }
+        hexDigits += parseInt(fourDigits,2).toString("16")
+        fourDigits = ""
+        if((i+1)%2 == 0)
+            hexDigits += " "
+    }
+    return hexDigits
 }
 
 
@@ -73,4 +89,5 @@ module.exports = {
     divideTo8CharArrays,
     xorBinaryStrings,
     permutateWithBitMap,
+    binStringToHexString,
 }

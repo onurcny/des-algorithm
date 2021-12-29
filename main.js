@@ -1,4 +1,7 @@
-const { encrypt } = require("./aes");
+const { encrypt} = require("./aes");
+const { binStringToHexString } = require('./utils')
 
-let en = encrypt("onurcan", "envercan")
-console.log(en);
+let encrypted = encrypt("onurcan", "envercan")
+
+
+console.log(binStringToHexString(encrypted));
