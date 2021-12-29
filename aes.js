@@ -1,12 +1,14 @@
 const { textToHexArray, textToBinaryArray, divideTo8CharArrays, xorBinaryStrings } = require("./utils")
 const {
     SBoxes,
-    initialPermutationBitMap,
+    SBoxBitMap,
     KeyCBitMap,
     KeyDBitMap,
     keyBitRotation,
     PC2RightHalfBitMap,
-    PC2LeftHalfBitMap
+    PC2LeftHalfBitMap,
+    finalPermutationBitMap,
+    initialPermutationBitMap,
 } = require('./constants')
 
 const encrypte = (input, key) => {
@@ -45,7 +47,7 @@ const des16Rounds = (binArray, key) => {
         keyC = newKeyC
         keyD = newKeyD
 
-        // sağ tarafı sol tarafa yaz
+        // sağ tarafı sol tarafa kopyala
         let oldLeftInput = leftInput
         leftInput = rightInput
 
@@ -53,7 +55,6 @@ const des16Rounds = (binArray, key) => {
 
         // rightInput'u anahtarla XOR'lanabilecek boyuta getir
         rightInput = rightInput[rightInput.length-1] + rightInput + rightInput[0]
-        // console.log("54",rightInput);
 
         // rightInput'u 6 bitlik 8 gruba ayir
         let rightInput6li = []
@@ -64,20 +65,15 @@ const des16Rounds = (binArray, key) => {
             }
             rightInput6li.push(temp6li)
         }
-        // console.log("65", rightInput6li);
-
-
-
         rightInput6li = rightInput6li.join("").replace(/,/g,'')
-        // console.log("70", rightInput6li);
+
         
         // XOR RoundKey rightInput
         xorResult = xorBinaryStrings(rightInput6li, roundKey)
-        // console.log("74", xorResult);
 
 
 
-        // S BOX
+        // S BOX işlemleri
         let sBoxValuesAll = ""
         for(let i=0; i<8; i++){
             let rowBits = xorResult[i*6] + xorResult[i*6+5]
@@ -97,42 +93,18 @@ const des16Rounds = (binArray, key) => {
 
 
 
-        // Permutation after sBoxes
-        let sBoxBitMap = [
-            16, 7, 20, 21, 29, 12, 28, 17,
-            1, 15, 23, 26, 5, 18, 31, 10,
-            2, 8, 24, 14, 32, 27, 3, 9,
-            19, 13, 30, 6, 22, 11, 4, 25
-        ]
-
+        // S-Box işlemleri sonrası permütasyon
         let sBoxPermutationResult = ""
-        for(let i of sBoxBitMap){
+        for(let i of SBoxBitMap){
             sBoxPermutationResult += sBoxValuesAll[i-1]
         }
 
 
+
+        // sonraki adımın girişini ayarla
         rightInput = xorBinaryStrings(sBoxPermutationResult,oldLeftInput)
         roundInput = leftInput + rightInput
 
-        console.log("115", roundInput);
-        10010101
-        00011011
-        00110100
-        11111110
-        01001011
-        11100110
-        00101101
-        01010101
-
-
-        00000000
-        01111111
-        01000011
-        01011011
-        10110111
-        00001101
-        11000110
-        10011110
     }
 }
 
@@ -205,30 +177,11 @@ const generateRoundKey = (keyC, keyD, round) => {
     return [leftKeyHalf.join("") + RightKeyHalf.join(""), keyC, keyD]
 }
 
-// mangled = ringht -> mangler function & round key
-// right output = left & mangled -> xor
-// left output = right
-// left output + right output
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 const initialPermutation = (binArray) => {
-    let text = ""
-    for(t of binArray){text += t}
-    // text = binArray.join("")
+    text = binArray.join("")
     
     tempOutput = []
     for (n of initialPermutationBitMap){
@@ -248,17 +201,6 @@ const initialPermutation = (binArray) => {
 
 const finalPermutation = (binArray) => {
     text = binArray.join("")
-
-    let finalPermutationBitMap = [
-        [40,8,48,16,56,24,64,32],
-        [39,7,47,15,55,23,65,31],
-        [38,6,46,14,54,22,62,30],
-        [37,5,45,13,53,21,61,29],
-        [36,4,44,12,52,20,60,28],
-        [35,3,43,11,51,19,59,27],
-        [34,2,42,10,50,18,58,26],
-        [33,1,41,9,49,17,57,25],
-    ]
 
     let tempOutput = []
     for (n of finalPermutationBitMap)
